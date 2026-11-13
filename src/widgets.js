@@ -166,6 +166,15 @@ function networkStateRow(network) {
   return { value: t('widget.network.ok'), color: WIDGET_COLORS.SUCCESS };
 }
 
+/** Names of the watched municipalities, cut to the 40 characters of a row. */
+function followedMunicipalities(network) {
+  if (network.watched.length === 0) {
+    return t('widget.network.all');
+  }
+  const names = network.watched.map((key) => MUNICIPALITY_NAME[key]).join(', ');
+  return names.length > 40 ? `${names.slice(0, 39)}…` : names;
+}
+
 function networkContent(gladys, service, { language }) {
   const { network } = service;
   const ids = networkIds(gladys);
@@ -213,6 +222,16 @@ function networkContent(gladys, service, { language }) {
     type: 'status',
     items: [
       { label: t('widget.network.state'), icon: 'activity', ...networkStateRow(network) },
+      ...(network.state !== NETWORK_STATE.DISABLED
+        ? [
+            {
+              label: t('widget.network.followed'),
+              icon: 'map-pin',
+              value: followedMunicipalities(network),
+              color: WIDGET_COLORS.NEUTRAL,
+            },
+          ]
+        : []),
       ...(network.checkedAt
         ? [
             {

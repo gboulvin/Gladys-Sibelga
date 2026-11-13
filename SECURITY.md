@@ -33,6 +33,11 @@ Gladys before reporting a problem.
   password as a `secret` field) and hands them to the integration, which only
   sends them to the Sibelga sign-in page (`auth.conso.sibelga.be`) over HTTPS.
   They are never logged and never written to disk by the integration.
+- **The location of your houses.** The integration asks Gladys for the
+  coordinates of your houses to find which Brussels municipality they are in.
+  This is computed inside the integration, from boundaries it ships with:
+  the coordinates are never sent to Sibelga or to any other service, never
+  logged and never written to disk. Only the municipality is kept, in memory.
 - **Session tokens.** The access and refresh tokens Sibelga returns stay in
   memory: a restart signs in again.
 - **`/data/state.json`.** The only file the integration writes. It holds the

@@ -53,8 +53,13 @@ Otros ajustes:
   horas por defecto). Sibelga publica las lecturas de un día al día
   siguiente: un intervalo más corto no aporta nada.
 - **Seguir el estado de la red** — desactívelo si solo quiere el consumo.
-- **Mis municipios** — los municipios cuyas averías le afectan. Déjelo vacío
-  para seguir toda la región.
+- **Seguir el municipio de mi hogar** — activado por defecto. La integración
+  lee la ubicación de las casas definidas en Gladys y
+  sigue el municipio de Bruselas de cada una. Una casa fuera de Bruselas, o
+  sin ubicación, se ignora.
+- **Otros municipios a seguir** — municipios seguidos además del de su hogar
+  (su lugar de trabajo, el hogar de un familiar). Si no se sigue ningún
+  municipio, se sigue toda la región.
 - **Actualización del estado de la red** — cada 15 minutos por defecto, cada
   5 minutos como máximo.
 
@@ -136,6 +141,11 @@ activan los disparadores: solo lo que cambie después.
 - Las averías se leen de una página web pública. Sibelga protege su sitio
   contra robots: cuando rechaza la integración, el estado muestra
   **Desconocido**, y la integración no intenta eludir la protección.
+- La integración pide a Gladys la ubicación de sus casas, únicamente para
+  encontrar su municipio. Lo hace por sí misma, a partir de los límites
+  municipales que incluye: las coordenadas nunca se envían a Sibelga ni a
+  ningún otro servicio, nunca se escriben en los registros y nunca se
+  guardan.
 - No se siguen las interrupciones planificadas ni las obras.
 
 ## Solución de problemas

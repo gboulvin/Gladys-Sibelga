@@ -209,6 +209,18 @@ export const MESSAGES = {
     de: 'In Brüssel',
     es: 'En Bruselas',
   },
+  'widget.network.followed': {
+    en: 'Municipalities followed',
+    fr: 'Communes suivies',
+    de: 'Verfolgte Gemeinden',
+    es: 'Municipios seguidos',
+  },
+  'widget.network.all': {
+    en: 'All of Brussels',
+    fr: 'Tout Bruxelles',
+    de: 'Ganz Brüssel',
+    es: 'Toda Bruselas',
+  },
   'widget.network.checked': {
     en: 'Last check',
     fr: 'Dernière vérification',

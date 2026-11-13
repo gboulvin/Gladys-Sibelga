@@ -43,6 +43,9 @@ src/sibelga/constants.js          Sibelga endpoints, public client identifiers, 
 src/sibelga/auth.js               sign-in to the consumption portal (Azure AD B2C form), tokens
 src/sibelga/api.js                portal API client + normalization of every answer
 src/sibelga/network.js            reader of the public outage page
+src/sibelga/geo.js                municipality of a home, from its coordinates (offline)
+src/sibelga/boundaries.js         GENERATED outlines of the 19 municipalities (UrbIS open data)
+scripts/generate-boundaries.mjs   dev tool regenerating boundaries.js, run by hand
 src/sibelga/http.js, dates.js     fetch wrapper + SibelgaError, Brussels-time helpers
 src/devices/meter.js              device of a meter (one per EAN): features, states, intervals
 src/devices/network.js            device of the grid: outage counters
@@ -84,6 +87,15 @@ except the explicit refresh actions.
   is only sent to the Sibelga sign-in page. Never log it, never put it — nor
   the e-mail address, a token or an authorization code — in an error message,
   a state, a scene event or `/data`.
+- **Home location.** The manifest declares `location: true`:
+  `gladys.getHouses()` gives the coordinates of the user's houses, read on
+  every connection. They are sensitive: turn them into municipality keys at
+  once with `src/sibelga/geo.js` and keep only those keys. Never send a
+  coordinate to Sibelga or to any service (no geocoding API), never log it,
+  never put it in a state, a scene event, a widget or `/data`. The watched
+  municipalities are the union of the houses' ones (unless
+  `use_home_location` is off) and the configured ones; none means the whole
+  region. `src/sibelga/boundaries.js` is generated: never edit it by hand.
 - **External ids are forever.** Build them with
   `gladys.externalIds(type, platformId)`: `meter` + the EAN code, `network` +
   `brussels`. Gladys keys devices, their history, scenes and dashboards on

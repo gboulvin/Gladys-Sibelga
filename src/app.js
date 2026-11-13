@@ -77,6 +77,7 @@ export function registerHandlers(gladys, options = {}) {
         initialized = true;
       }
       service.configure(await gladys.getConfig());
+      await service.locateHomes();
       await service.publishDevices();
       service.start();
       await service.refreshAll();

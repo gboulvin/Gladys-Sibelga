@@ -51,8 +51,13 @@ Other settings:
   default). Sibelga publishes the readings of a day on the next day, so a
   shorter interval brings nothing.
 - **Follow the grid status** — turn it off if you only want consumption.
-- **My municipalities** — the municipalities whose outages concern you. Leave
-  empty to follow the whole region.
+- **Follow the municipality of my home** — on by default. The integration
+  reads the location of the houses set in Gladys and
+  follows the Brussels municipality each one is in. A house outside Brussels,
+  or without a location, is ignored.
+- **Other municipalities to follow** — municipalities followed in addition to
+  the one of your home (your workplace, a relative's home). When no
+  municipality is followed at all, the whole region is.
 - **Grid status refresh** — every 15 minutes by default, 5 minutes at most.
 
 ## Devices
@@ -130,6 +135,10 @@ published do not fire the triggers: only what changes afterwards does.
 - Outages are read from a public web page. Sibelga protects its site against
   robots: when it refuses the integration, the status shows **Unknown**, and
   the integration does not try to get around the protection.
+- The integration asks Gladys for the location of your houses, only to find
+  their municipality. It does so by itself, from the municipal boundaries it
+  ships with: the coordinates are never sent to Sibelga or to any other
+  service, never logged and never stored.
 - Planned interruptions and street works are not followed.
 
 ## Troubleshooting

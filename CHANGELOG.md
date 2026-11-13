@@ -10,6 +10,22 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Added
+
+- The grid status follows the municipality of your home: the integration reads
+  the location of the houses set in Gladys and finds their Brussels
+  municipality by itself, without sending the coordinates anywhere. A new
+  setting, **Follow the municipality of my home**, turns it off.
+- The grid status widget names the municipalities followed.
+
+### Changed
+
+- The integration now asks for the house location permission when it is
+  installed or updated.
+- The municipalities chosen in the configuration are followed in addition to
+  the one of your home; the setting is now named **Other municipalities to
+  follow**.
+
 ## [1.0.0] - 2026-11-13
 
 ### Added

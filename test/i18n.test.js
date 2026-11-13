@@ -60,6 +60,8 @@ test('widget labels fit their tile, row or button', () => {
     'widget.network.elsewhere': 40,
     'widget.network.unknown': 40,
     'widget.network.disabled': 40,
+    'widget.network.followed': 40,
+    'widget.network.all': 40,
     'widget.no_meter': 300,
     'widget.no_data': 80,
   };

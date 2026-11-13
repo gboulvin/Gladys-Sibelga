@@ -17,6 +17,7 @@ import { t } from './i18n.js';
 import { SibelgaSession } from './sibelga/auth.js';
 import { SibelgaApi } from './sibelga/api.js';
 import { localDate, shiftDate } from './sibelga/dates.js';
+import { municipalitiesOfHouses } from './sibelga/geo.js';
 import { fetchOutages } from './sibelga/network.js';
 import {
   FEATURE,
@@ -70,6 +71,9 @@ export class SibelgaService {
   #api = null;
   #timers = [];
   #runs = { consumption: null, network: null };
+  // Municipalities the houses of Gladys are in. Only these keys are kept:
+  // the coordinates themselves never stay in memory.
+  #homeMunicipalities = [];
 
   config = normalizeConfig();
   /** EAN -> { meter, days, indexes } */
@@ -114,7 +118,32 @@ export class SibelgaService {
         this.meters = new Map();
       }
     }
-    this.network.watched = this.config.municipalities;
+    this.network.watched = this.watchedMunicipalities();
+  }
+
+  /**
+   * Read where the houses of Gladys are, and keep their municipalities. Called
+   * on every connection: Gladys sends no event when a house moves.
+   */
+  async locateHomes() {
+    try {
+      this.#homeMunicipalities = municipalitiesOfHouses(await this.#gladys.getHouses());
+    } catch (err) {
+      // An older Gladys, or the permission refused: the choice of the
+      // configuration still applies.
+      logger.warn(`Houses not read (${err.message}): only the configured municipalities apply`);
+      this.#homeMunicipalities = [];
+    }
+    this.network.watched = this.watchedMunicipalities();
+  }
+
+  /**
+   * Municipalities whose outages concern the user: the ones chosen in the
+   * configuration, plus the ones of their houses. Empty: the whole region.
+   */
+  watchedMunicipalities() {
+    const homes = this.config.use_home_location ? this.#homeMunicipalities : [];
+    return [...new Set([...homes, ...this.config.municipalities])];
   }
 
   // --- Timers ----------------------------------------------------------------
@@ -326,7 +355,7 @@ export class SibelgaService {
 
   async #readNetwork() {
     const checkedAt = this.#now().toISOString();
-    const watched = this.config.municipalities;
+    const watched = this.watchedMunicipalities();
     if (!this.config.network_status_enabled) {
       this.network = {
         state: NETWORK_STATE.DISABLED,

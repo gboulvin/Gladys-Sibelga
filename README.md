@@ -55,6 +55,12 @@ Things to know:
   credentials saved in Gladys (`src/sibelga/auth.js`).
 - sibelga.be is protected against robots. When it refuses the request, the
   grid status is "Unknown" — the integration never tries to get around it.
+- The grid status follows the municipality of your home: the integration
+  asks Gladys for the location of its houses (manifest `location: true`) and
+  finds their municipality offline, from the boundaries in
+  `src/sibelga/boundaries.js` (UrbIS open data of the Brussels-Capital
+  Region). The coordinates are never sent anywhere. Other municipalities can
+  be added in the configuration.
 - Planned interruptions and street works are not followed.
 
 ### Validation status
@@ -78,6 +84,7 @@ issue with the integration logs (credentials removed) if one of them fails.
 │  │  ├─ auth.js                     #   sign-in and tokens
 │  │  ├─ api.js                      #   consumption portal API
 │  │  ├─ network.js                  #   public outage page
+│  │  ├─ geo.js, boundaries.js       #   municipality of a home (offline, generated outlines)
 │  │  └─ constants.js, http.js, dates.js
 │  ├─ devices/                       # meter.js (one device per EAN), network.js (grid)
 │  ├─ scenes.js                      # scene triggers and actions
@@ -86,6 +93,7 @@ issue with the integration logs (credentials removed) if one of them fails.
 │  ├─ i18n.js                        # runtime texts (en, fr, de, es)
 │  ├─ config.js                      # config defaults + normalization
 │  └─ store.js                       # /data/state.json (what was already announced)
+├─ scripts/generate-boundaries.mjs   # dev tool: rebuilds the municipal outlines
 ├─ docs/{en,fr,de,es}.md             # user documentation, re-hosted by Gladys
 ├─ test/                             # unit tests (`node --test`), no network
 ├─ gladys-assistant-integration.json # manifest

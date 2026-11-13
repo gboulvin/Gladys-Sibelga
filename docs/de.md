@@ -54,8 +54,12 @@ Weitere Einstellungen:
   Tages am Folgetag; ein kürzeres Intervall bringt nichts.
 - **Netzstatus verfolgen** — schalten Sie dies aus, wenn Sie nur den
   Verbrauch möchten.
-- **Meine Gemeinden** — die Gemeinden, deren Störungen Sie betreffen. Leer
-  lassen, um die gesamte Region zu verfolgen.
+- **Gemeinde meines Zuhauses verfolgen** — standardmäßig aktiv. Die
+  Integration liest den Standort der in Gladys definierten Häuser und verfolgt die Brüsseler Gemeinde jedes
+  Hauses. Ein Haus außerhalb Brüssels oder ohne Standort wird ignoriert.
+- **Weitere zu verfolgende Gemeinden** — Gemeinden, die zusätzlich zu der
+  Ihres Zuhauses verfolgt werden (Ihr Arbeitsplatz, das Zuhause eines
+  Angehörigen). Wird gar keine Gemeinde verfolgt, gilt die gesamte Region.
 - **Aktualisierung des Netzstatus** — standardmäßig alle 15 Minuten,
   höchstens alle 5 Minuten.
 
@@ -141,6 +145,10 @@ veröffentlichte Werte nichts aus: nur, was sich danach ändert.
 - Störungen werden von einer öffentlichen Webseite gelesen. Sibelga schützt
   seine Website vor Robotern: Lehnt sie die Integration ab, zeigt der Status
   **Unbekannt**, und die Integration versucht nicht, den Schutz zu umgehen.
+- Die Integration fragt Gladys nach dem Standort Ihrer Häuser, nur um deren
+  Gemeinde zu ermitteln. Sie tut dies selbst, anhand der mitgelieferten
+  Gemeindegrenzen: Die Koordinaten werden nie an Sibelga oder einen anderen
+  Dienst gesendet, nie in die Logs geschrieben und nie gespeichert.
 - Geplante Unterbrechungen und Baustellen werden nicht verfolgt.
 
 ## Fehlerbehebung

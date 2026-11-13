@@ -55,8 +55,12 @@ Autres réglages :
   lendemain : un intervalle plus court n'apporte rien.
 - **Suivre l'état du réseau** — désactivez-le si seule la consommation vous
   intéresse.
-- **Mes communes** — les communes dont les pannes vous concernent. Laissez
-  vide pour suivre toute la Région.
+- **Suivre la commune de mon domicile** — activé par défaut. L'intégration
+  lit la localisation des maisons définies dans Gladys et suit la commune bruxelloise de chacune. Une maison hors de
+  Bruxelles, ou sans localisation, est ignorée.
+- **Autres communes à suivre** — communes suivies en plus de celle de votre
+  domicile (votre lieu de travail, le domicile d'un proche). Si aucune
+  commune n'est suivie, toute la Région l'est.
 - **Actualisation de l'état du réseau** — toutes les 15 minutes par défaut,
   toutes les 5 minutes au plus.
 
@@ -143,6 +147,11 @@ ne lancent pas les déclencheurs : seul ce qui change ensuite le fait.
 - Les pannes sont lues sur une page web publique. Sibelga protège son site
   contre les robots : quand il refuse l'intégration, l'état affiche
   **Inconnu**, et l'intégration ne cherche pas à contourner la protection.
+- L'intégration demande à Gladys la localisation de vos maisons, uniquement
+  pour trouver leur commune. Elle le fait elle-même, à partir des limites
+  communales qu'elle embarque : les coordonnées ne sont jamais envoyées à
+  Sibelga ni à un autre service, jamais écrites dans les logs et jamais
+  enregistrées.
 - Les interruptions planifiées et les chantiers ne sont pas suivis.
 
 ## Dépannage

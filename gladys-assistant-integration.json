@@ -14,6 +14,7 @@
   "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Sibelga/main/cover.png",
   "categories": ["energy"],
   "transports": ["cloud"],
+  "location": true,
   "config_schema": [
     {
       "key": "account_intro",
@@ -163,19 +164,37 @@
       "default": true
     },
     {
+      "key": "use_home_location",
+      "type": "boolean",
+      "label": {
+        "en": "Follow the municipality of my home",
+        "fr": "Suivre la commune de mon domicile",
+        "de": "Gemeinde meines Zuhauses verfolgen",
+        "es": "Seguir el municipio de mi hogar"
+      },
+      "description": {
+        "en": "Uses the location of the houses set in Gladys to find their Brussels municipality. The coordinates stay inside the integration: they are never sent to Sibelga or to anyone else.",
+        "fr": "Utilise la localisation des maisons définies dans Gladys pour trouver leur commune bruxelloise. Les coordonnées restent dans l'intégration : elles ne sont jamais envoyées à Sibelga ni à qui que ce soit.",
+        "de": "Verwendet den Standort der in Gladys definierten Häuser, um ihre Brüsseler Gemeinde zu ermitteln. Die Koordinaten bleiben in der Integration: Sie werden weder an Sibelga noch an Dritte gesendet.",
+        "es": "Usa la ubicación de las casas definidas en Gladys para encontrar su municipio de Bruselas. Las coordenadas permanecen en la integración: nunca se envían a Sibelga ni a nadie más."
+      },
+      "required": false,
+      "default": true
+    },
+    {
       "key": "municipalities",
       "type": "multi_select",
       "label": {
-        "en": "My municipalities",
-        "fr": "Mes communes",
-        "de": "Meine Gemeinden",
-        "es": "Mis municipios"
+        "en": "Other municipalities to follow",
+        "fr": "Autres communes à suivre",
+        "de": "Weitere zu verfolgende Gemeinden",
+        "es": "Otros municipios a seguir"
       },
       "description": {
-        "en": "Outages are counted and announced for these municipalities. Leave empty for the whole Brussels region.",
-        "fr": "Les pannes sont comptées et annoncées pour ces communes. Laissez vide pour toute la Région bruxelloise.",
-        "de": "Störungen werden für diese Gemeinden gezählt und gemeldet. Leer lassen für die gesamte Region Brüssel.",
-        "es": "Las averías se cuentan y anuncian para estos municipios. Déjelo vacío para toda la región de Bruselas."
+        "en": "Outages are counted and announced for these municipalities, in addition to the one of your home. With no municipality at all, the whole Brussels region is followed.",
+        "fr": "Les pannes sont comptées et annoncées pour ces communes, en plus de celle de votre domicile. Sans aucune commune, toute la Région bruxelloise est suivie.",
+        "de": "Störungen werden für diese Gemeinden gezählt und gemeldet, zusätzlich zu der Ihres Zuhauses. Ohne jede Gemeinde wird die gesamte Region Brüssel verfolgt.",
+        "es": "Las averías se cuentan y anuncian para estos municipios, además del de su hogar. Sin ningún municipio, se sigue toda la región de Bruselas."
       },
       "required": false,
       "options": [

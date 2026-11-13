@@ -20,8 +20,11 @@ export const DEFAULT_CONFIG = {
   // readings of a day on the next one: there is nothing to gain below an hour.
   consumption_refresh_hours: 6,
   network_status_enabled: true,
-  // Keys of the municipalities to watch (see MUNICIPALITIES). Empty: the whole
-  // Brussels region.
+  // Also watch the municipalities the houses of Gladys are in (manifest
+  // `location: true`).
+  use_home_location: true,
+  // Keys of the municipalities to watch (see MUNICIPALITIES), on top of the
+  // ones of the houses. None at all: the whole Brussels region.
   municipalities: [],
   // Minutes between two reads of the public outage page.
   network_refresh_minutes: 15,
@@ -53,6 +56,7 @@ export function normalizeConfig(raw = {}) {
       24,
     ),
     network_status_enabled: raw.network_status_enabled !== false,
+    use_home_location: raw.use_home_location !== false,
     // A multi-select arrives as an array of keys; a hand-typed list of names
     // is accepted too. Anything that is not a Brussels municipality is dropped.
     municipalities: parseWatchedMunicipalities(

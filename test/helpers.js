@@ -88,6 +88,29 @@ export function outagePage(outages) {
     <a href="/en/outages-streetworks/power-outages/solved-outages">Solved outages</a></body></html>`;
 }
 
+/** Houses as Gladys returns them. */
+export const HOME_IXELLES = {
+  id: 'h1',
+  name: 'Home',
+  selector: 'home',
+  latitude: 50.8275,
+  longitude: 4.3722,
+};
+export const HOME_LEUVEN = {
+  id: 'h2',
+  name: 'Kot',
+  selector: 'kot',
+  latitude: 50.8798,
+  longitude: 4.7005,
+};
+export const HOME_UNLOCATED = {
+  id: 'h3',
+  name: 'Cabin',
+  selector: 'cabin',
+  latitude: null,
+  longitude: null,
+};
+
 export const OUTAGE_A = { id: '983a0e4d-47ac-401f-adbc-3cc496dd1ac3', title: 'Ixelles' };
 export const OUTAGE_B = { id: '8cac933c-5312-4875-90a5-0227275e161d', title: 'Anderlecht' };
 
@@ -227,11 +250,17 @@ export const NOW = new Date('2026-11-12T08:00:00Z');
 
 /**
  * A fake Gladys wired like index.js does, on a fake Sibelga.
- * @param {{ config?: object, sibelga?: object, connect?: boolean }} [options]
+ * @param {{ config?: object, houses?: object[], sibelga?: object, connect?: boolean }} [options]
  */
-export async function createApp({ config, sibelga = createFakeSibelga(), connect = true } = {}) {
+export async function createApp({
+  config,
+  houses = [],
+  sibelga = createFakeSibelga(),
+  connect = true,
+} = {}) {
   const gladys = createFakeGladys({
     config: config ?? { email: EMAIL, password: PASSWORD },
+    houses,
   });
   let now = NOW;
   const service = registerHandlers(gladys, {
