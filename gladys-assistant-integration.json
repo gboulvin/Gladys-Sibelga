@@ -1,0 +1,1054 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Sibelga",
+  "description": {
+    "en": "Gas and electricity consumption and grid outages from Sibelga (Brussels).",
+    "fr": "Consommations de gaz et d'électricité et pannes du réseau Sibelga (Bruxelles).",
+    "de": "Gas- und Stromverbrauch sowie Netzstörungen von Sibelga (Brüssel).",
+    "es": "Consumo de gas y electricidad y averías de la red de Sibelga (Bruselas)."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-sibelga:1.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Sibelga/main/cover.png",
+  "categories": ["energy"],
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "account_intro",
+      "type": "section",
+      "label": {
+        "en": "Sibelga account",
+        "fr": "Compte Sibelga",
+        "de": "Sibelga-Konto",
+        "es": "Cuenta Sibelga"
+      },
+      "description": {
+        "en": "Consumption data comes from the Sibelga \"My consumption\" portal. Create your account there, add your meters (EAN code) and allow remote reading: the integration then signs in with the same e-mail address and password. Sibelga publishes the readings of a day on the next one, for smart meters only.",
+        "fr": "Les données de consommation proviennent du portail « Ma consommation » de Sibelga. Créez-y votre compte, ajoutez vos compteurs (code EAN) et autorisez la lecture à distance : l'intégration se connecte ensuite avec la même adresse e-mail et le même mot de passe. Sibelga publie les relevés d'un jour le lendemain, pour les compteurs intelligents uniquement.",
+        "de": "Die Verbrauchsdaten stammen aus dem Sibelga-Portal „Mein Verbrauch“. Erstellen Sie dort Ihr Konto, fügen Sie Ihre Zähler (EAN-Code) hinzu und erlauben Sie die Fernablesung: Die Integration meldet sich dann mit derselben E-Mail-Adresse und demselben Passwort an. Sibelga veröffentlicht die Werte eines Tages am Folgetag, nur für intelligente Zähler.",
+        "es": "Los datos de consumo proceden del portal «Mi consumo» de Sibelga. Cree allí su cuenta, añada sus contadores (código EAN) y autorice la lectura remota: la integración inicia sesión con el mismo correo electrónico y la misma contraseña. Sibelga publica las lecturas de un día al día siguiente, solo para contadores inteligentes."
+      },
+      "links": [
+        {
+          "url": "https://conso.sibelga.be/",
+          "label": {
+            "en": "Sibelga consumption portal",
+            "fr": "Portail de consommation Sibelga",
+            "de": "Sibelga-Verbrauchsportal",
+            "es": "Portal de consumo de Sibelga"
+          }
+        }
+      ]
+    },
+    {
+      "key": "email",
+      "type": "string",
+      "label": {
+        "en": "E-mail address",
+        "fr": "Adresse e-mail",
+        "de": "E-Mail-Adresse",
+        "es": "Correo electrónico"
+      },
+      "description": {
+        "en": "E-mail address of your Sibelga consumption account.",
+        "fr": "Adresse e-mail de votre compte de consommation Sibelga.",
+        "de": "E-Mail-Adresse Ihres Sibelga-Verbrauchskontos.",
+        "es": "Correo electrónico de su cuenta de consumo de Sibelga."
+      },
+      "placeholder": {
+        "en": "e.g. name@example.com",
+        "fr": "ex. nom@exemple.be",
+        "de": "z. B. name@beispiel.be",
+        "es": "p. ej. nombre@ejemplo.com"
+      },
+      "required": false,
+      "default": ""
+    },
+    {
+      "key": "password",
+      "type": "secret",
+      "label": {
+        "en": "Password",
+        "fr": "Mot de passe",
+        "de": "Passwort",
+        "es": "Contraseña"
+      },
+      "description": {
+        "en": "Stored by Gladys and only sent to Sibelga to sign in.",
+        "fr": "Conservé par Gladys et envoyé uniquement à Sibelga pour la connexion.",
+        "de": "Wird von Gladys gespeichert und nur zur Anmeldung an Sibelga gesendet.",
+        "es": "Guardada por Gladys y enviada únicamente a Sibelga para iniciar sesión."
+      },
+      "required": false
+    },
+    {
+      "key": "history_days",
+      "type": "number",
+      "label": {
+        "en": "History to import (days)",
+        "fr": "Historique à importer (jours)",
+        "de": "Zu importierender Verlauf (Tage)",
+        "es": "Historial a importar (días)"
+      },
+      "description": {
+        "en": "Days of daily consumption sent to Gladys for each meter.",
+        "fr": "Nombre de jours de consommation quotidienne envoyés à Gladys pour chaque compteur.",
+        "de": "Anzahl der Tage mit Tagesverbrauch, die pro Zähler an Gladys gesendet werden.",
+        "es": "Días de consumo diario enviados a Gladys para cada contador."
+      },
+      "required": false,
+      "default": 30,
+      "min": 1,
+      "max": 365
+    },
+    {
+      "key": "consumption_refresh_hours",
+      "type": "number",
+      "label": {
+        "en": "Consumption refresh (hours)",
+        "fr": "Actualisation des consommations (heures)",
+        "de": "Aktualisierung des Verbrauchs (Stunden)",
+        "es": "Actualización del consumo (horas)"
+      },
+      "description": {
+        "en": "How often the consumption portal is read. Sibelga updates it once a day.",
+        "fr": "Fréquence de lecture du portail de consommation. Sibelga le met à jour une fois par jour.",
+        "de": "Wie oft das Verbrauchsportal gelesen wird. Sibelga aktualisiert es einmal täglich.",
+        "es": "Frecuencia de lectura del portal de consumo. Sibelga lo actualiza una vez al día."
+      },
+      "required": false,
+      "default": 6,
+      "min": 1,
+      "max": 24
+    },
+    {
+      "key": "network_intro",
+      "type": "section",
+      "label": {
+        "en": "Grid status",
+        "fr": "État du réseau",
+        "de": "Netzstatus",
+        "es": "Estado de la red"
+      },
+      "description": {
+        "en": "The integration reads the public page of ongoing outages on sibelga.be; no account is needed. Sibelga offers no official data feed: if the site refuses automated reading, the status shows as unknown.",
+        "fr": "L'intégration lit la page publique des pannes en cours sur sibelga.be ; aucun compte n'est nécessaire. Sibelga ne propose pas de flux de données officiel : si le site refuse la lecture automatisée, l'état s'affiche comme inconnu.",
+        "de": "Die Integration liest die öffentliche Seite der laufenden Störungen auf sibelga.be; ein Konto ist nicht nötig. Sibelga bietet keinen offiziellen Datenfeed: Lehnt die Website das automatische Auslesen ab, wird der Status als unbekannt angezeigt.",
+        "es": "La integración lee la página pública de averías en curso de sibelga.be; no se necesita cuenta. Sibelga no ofrece una fuente de datos oficial: si el sitio rechaza la lectura automatizada, el estado aparece como desconocido."
+      },
+      "links": [
+        {
+          "url": "https://www.sibelga.be/en/outages-streetworks/power-outages/actual-power-outages",
+          "label": {
+            "en": "Ongoing outages on sibelga.be",
+            "fr": "Pannes en cours sur sibelga.be",
+            "de": "Laufende Störungen auf sibelga.be",
+            "es": "Averías en curso en sibelga.be"
+          }
+        }
+      ]
+    },
+    {
+      "key": "network_status_enabled",
+      "type": "boolean",
+      "label": {
+        "en": "Follow the grid status",
+        "fr": "Suivre l'état du réseau",
+        "de": "Netzstatus verfolgen",
+        "es": "Seguir el estado de la red"
+      },
+      "required": false,
+      "default": true
+    },
+    {
+      "key": "municipalities",
+      "type": "multi_select",
+      "label": {
+        "en": "My municipalities",
+        "fr": "Mes communes",
+        "de": "Meine Gemeinden",
+        "es": "Mis municipios"
+      },
+      "description": {
+        "en": "Outages are counted and announced for these municipalities. Leave empty for the whole Brussels region.",
+        "fr": "Les pannes sont comptées et annoncées pour ces communes. Laissez vide pour toute la Région bruxelloise.",
+        "de": "Störungen werden für diese Gemeinden gezählt und gemeldet. Leer lassen für die gesamte Region Brüssel.",
+        "es": "Las averías se cuentan y anuncian para estos municipios. Déjelo vacío para toda la región de Bruselas."
+      },
+      "required": false,
+      "options": [
+        {
+          "value": "anderlecht",
+          "label": {
+            "en": "Anderlecht",
+            "fr": "Anderlecht",
+            "de": "Anderlecht",
+            "es": "Anderlecht"
+          }
+        },
+        {
+          "value": "auderghem",
+          "label": {
+            "en": "Auderghem",
+            "fr": "Auderghem",
+            "de": "Auderghem",
+            "es": "Auderghem"
+          }
+        },
+        {
+          "value": "berchem-sainte-agathe",
+          "label": {
+            "en": "Berchem-Sainte-Agathe",
+            "fr": "Berchem-Sainte-Agathe",
+            "de": "Berchem-Sainte-Agathe",
+            "es": "Berchem-Sainte-Agathe"
+          }
+        },
+        {
+          "value": "bruxelles",
+          "label": {
+            "en": "Brussels (City)",
+            "fr": "Bruxelles (Ville)",
+            "de": "Brüssel (Stadt)",
+            "es": "Bruselas (Ciudad)"
+          }
+        },
+        {
+          "value": "etterbeek",
+          "label": {
+            "en": "Etterbeek",
+            "fr": "Etterbeek",
+            "de": "Etterbeek",
+            "es": "Etterbeek"
+          }
+        },
+        {
+          "value": "evere",
+          "label": {
+            "en": "Evere",
+            "fr": "Evere",
+            "de": "Evere",
+            "es": "Evere"
+          }
+        },
+        {
+          "value": "forest",
+          "label": {
+            "en": "Forest",
+            "fr": "Forest",
+            "de": "Forest",
+            "es": "Forest"
+          }
+        },
+        {
+          "value": "ganshoren",
+          "label": {
+            "en": "Ganshoren",
+            "fr": "Ganshoren",
+            "de": "Ganshoren",
+            "es": "Ganshoren"
+          }
+        },
+        {
+          "value": "ixelles",
+          "label": {
+            "en": "Ixelles",
+            "fr": "Ixelles",
+            "de": "Ixelles",
+            "es": "Ixelles"
+          }
+        },
+        {
+          "value": "jette",
+          "label": {
+            "en": "Jette",
+            "fr": "Jette",
+            "de": "Jette",
+            "es": "Jette"
+          }
+        },
+        {
+          "value": "koekelberg",
+          "label": {
+            "en": "Koekelberg",
+            "fr": "Koekelberg",
+            "de": "Koekelberg",
+            "es": "Koekelberg"
+          }
+        },
+        {
+          "value": "molenbeek-saint-jean",
+          "label": {
+            "en": "Molenbeek-Saint-Jean",
+            "fr": "Molenbeek-Saint-Jean",
+            "de": "Molenbeek-Saint-Jean",
+            "es": "Molenbeek-Saint-Jean"
+          }
+        },
+        {
+          "value": "saint-gilles",
+          "label": {
+            "en": "Saint-Gilles",
+            "fr": "Saint-Gilles",
+            "de": "Saint-Gilles",
+            "es": "Saint-Gilles"
+          }
+        },
+        {
+          "value": "saint-josse-ten-noode",
+          "label": {
+            "en": "Saint-Josse-ten-Noode",
+            "fr": "Saint-Josse-ten-Noode",
+            "de": "Saint-Josse-ten-Noode",
+            "es": "Saint-Josse-ten-Noode"
+          }
+        },
+        {
+          "value": "schaerbeek",
+          "label": {
+            "en": "Schaerbeek",
+            "fr": "Schaerbeek",
+            "de": "Schaerbeek",
+            "es": "Schaerbeek"
+          }
+        },
+        {
+          "value": "uccle",
+          "label": {
+            "en": "Uccle",
+            "fr": "Uccle",
+            "de": "Uccle",
+            "es": "Uccle"
+          }
+        },
+        {
+          "value": "watermael-boitsfort",
+          "label": {
+            "en": "Watermael-Boitsfort",
+            "fr": "Watermael-Boitsfort",
+            "de": "Watermael-Boitsfort",
+            "es": "Watermael-Boitsfort"
+          }
+        },
+        {
+          "value": "woluwe-saint-lambert",
+          "label": {
+            "en": "Woluwe-Saint-Lambert",
+            "fr": "Woluwe-Saint-Lambert",
+            "de": "Woluwe-Saint-Lambert",
+            "es": "Woluwe-Saint-Lambert"
+          }
+        },
+        {
+          "value": "woluwe-saint-pierre",
+          "label": {
+            "en": "Woluwe-Saint-Pierre",
+            "fr": "Woluwe-Saint-Pierre",
+            "de": "Woluwe-Saint-Pierre",
+            "es": "Woluwe-Saint-Pierre"
+          }
+        }
+      ]
+    },
+    {
+      "key": "network_refresh_minutes",
+      "type": "number",
+      "label": {
+        "en": "Grid status refresh (minutes)",
+        "fr": "Actualisation de l'état du réseau (minutes)",
+        "de": "Aktualisierung des Netzstatus (Minuten)",
+        "es": "Actualización del estado de la red (minutos)"
+      },
+      "required": false,
+      "default": 15,
+      "min": 5,
+      "max": 720
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the Sibelga account",
+        "fr": "Tester le compte Sibelga",
+        "de": "Sibelga-Konto testen",
+        "es": "Probar la cuenta Sibelga"
+      },
+      "timeout_seconds": 90
+    },
+    {
+      "key": "test_network_status",
+      "label": {
+        "en": "Test the grid status",
+        "fr": "Tester l'état du réseau",
+        "de": "Netzstatus testen",
+        "es": "Probar el estado de la red"
+      },
+      "timeout_seconds": 45
+    },
+    {
+      "key": "refresh",
+      "label": {
+        "en": "Refresh the data now",
+        "fr": "Actualiser les données maintenant",
+        "de": "Daten jetzt aktualisieren",
+        "es": "Actualizar los datos ahora"
+      },
+      "timeout_seconds": 120
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "outage_started",
+      "label": {
+        "en": "Sibelga outage started",
+        "fr": "Début d'une panne Sibelga",
+        "de": "Sibelga-Störung begonnen",
+        "es": "Inicio de una avería de Sibelga"
+      },
+      "description": {
+        "en": "A new outage appeared on the Sibelga grid.",
+        "fr": "Une nouvelle panne est apparue sur le réseau Sibelga.",
+        "de": "Im Sibelga-Netz ist eine neue Störung aufgetreten.",
+        "es": "Ha aparecido una nueva avería en la red de Sibelga."
+      },
+      "fields": [
+        {
+          "key": "scope",
+          "type": "select",
+          "label": {
+            "en": "Where",
+            "fr": "Où",
+            "de": "Wo",
+            "es": "Dónde"
+          },
+          "description": {
+            "en": "Leave empty to react to every outage in Brussels.",
+            "fr": "Laissez vide pour réagir à toutes les pannes à Bruxelles.",
+            "de": "Leer lassen, um auf jede Störung in Brüssel zu reagieren.",
+            "es": "Déjelo vacío para reaccionar a todas las averías en Bruselas."
+          },
+          "options": [
+            {
+              "value": "watched",
+              "label": {
+                "en": "In my municipalities",
+                "fr": "Dans mes communes",
+                "de": "In meinen Gemeinden",
+                "es": "En mis municipios"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Elsewhere in Brussels",
+                "fr": "Ailleurs à Bruxelles",
+                "de": "Anderswo in Brüssel",
+                "es": "En otras zonas de Bruselas"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Outage description",
+            "fr": "Description de la panne",
+            "de": "Beschreibung der Störung",
+            "es": "Descripción de la avería"
+          }
+        },
+        {
+          "key": "municipalities",
+          "type": "string",
+          "label": {
+            "en": "Municipalities",
+            "fr": "Communes",
+            "de": "Gemeinden",
+            "es": "Municipios"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Sibelga page",
+            "fr": "Page Sibelga",
+            "de": "Sibelga-Seite",
+            "es": "Página de Sibelga"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Ongoing outages in my municipalities",
+            "fr": "Pannes en cours dans mes communes",
+            "de": "Laufende Störungen in meinen Gemeinden",
+            "es": "Averías en curso en mis municipios"
+          }
+        },
+        {
+          "key": "id",
+          "type": "string",
+          "label": {
+            "en": "Outage identifier",
+            "fr": "Identifiant de la panne",
+            "de": "Kennung der Störung",
+            "es": "Identificador de la avería"
+          }
+        }
+      ]
+    },
+    {
+      "key": "outage_resolved",
+      "label": {
+        "en": "Sibelga outage resolved",
+        "fr": "Fin d'une panne Sibelga",
+        "de": "Sibelga-Störung behoben",
+        "es": "Fin de una avería de Sibelga"
+      },
+      "description": {
+        "en": "An outage is no longer listed by Sibelga.",
+        "fr": "Une panne n'est plus signalée par Sibelga.",
+        "de": "Eine Störung wird von Sibelga nicht mehr gemeldet.",
+        "es": "Una avería ya no aparece en la lista de Sibelga."
+      },
+      "fields": [
+        {
+          "key": "scope",
+          "type": "select",
+          "label": {
+            "en": "Where",
+            "fr": "Où",
+            "de": "Wo",
+            "es": "Dónde"
+          },
+          "description": {
+            "en": "Leave empty to react to every outage in Brussels.",
+            "fr": "Laissez vide pour réagir à toutes les pannes à Bruxelles.",
+            "de": "Leer lassen, um auf jede Störung in Brüssel zu reagieren.",
+            "es": "Déjelo vacío para reaccionar a todas las averías en Bruselas."
+          },
+          "options": [
+            {
+              "value": "watched",
+              "label": {
+                "en": "In my municipalities",
+                "fr": "Dans mes communes",
+                "de": "In meinen Gemeinden",
+                "es": "En mis municipios"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Elsewhere in Brussels",
+                "fr": "Ailleurs à Bruxelles",
+                "de": "Anderswo in Brüssel",
+                "es": "En otras zonas de Bruselas"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Outage description",
+            "fr": "Description de la panne",
+            "de": "Beschreibung der Störung",
+            "es": "Descripción de la avería"
+          }
+        },
+        {
+          "key": "municipalities",
+          "type": "string",
+          "label": {
+            "en": "Municipalities",
+            "fr": "Communes",
+            "de": "Gemeinden",
+            "es": "Municipios"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Sibelga page",
+            "fr": "Page Sibelga",
+            "de": "Sibelga-Seite",
+            "es": "Página de Sibelga"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Ongoing outages in my municipalities",
+            "fr": "Pannes en cours dans mes communes",
+            "de": "Laufende Störungen in meinen Gemeinden",
+            "es": "Averías en curso en mis municipios"
+          }
+        },
+        {
+          "key": "id",
+          "type": "string",
+          "label": {
+            "en": "Outage identifier",
+            "fr": "Identifiant de la panne",
+            "de": "Kennung der Störung",
+            "es": "Identificador de la avería"
+          }
+        }
+      ]
+    },
+    {
+      "key": "consumption_updated",
+      "label": {
+        "en": "New Sibelga consumption data",
+        "fr": "Nouvelles données de consommation Sibelga",
+        "de": "Neue Sibelga-Verbrauchsdaten",
+        "es": "Nuevos datos de consumo de Sibelga"
+      },
+      "description": {
+        "en": "Sibelga published a new day of readings for a meter.",
+        "fr": "Sibelga a publié une nouvelle journée de relevés pour un compteur.",
+        "de": "Sibelga hat einen neuen Tag mit Messwerten für einen Zähler veröffentlicht.",
+        "es": "Sibelga ha publicado un nuevo día de lecturas para un contador."
+      },
+      "fields": [
+        {
+          "key": "meter",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Meter",
+            "fr": "Compteur",
+            "de": "Zähler",
+            "es": "Contador"
+          }
+        },
+        {
+          "key": "energy",
+          "type": "select",
+          "label": {
+            "en": "Energy",
+            "fr": "Énergie",
+            "de": "Energie",
+            "es": "Energía"
+          },
+          "options": [
+            {
+              "value": "electricity",
+              "label": {
+                "en": "Electricity",
+                "fr": "Électricité",
+                "de": "Strom",
+                "es": "Electricidad"
+              }
+            },
+            {
+              "value": "gas",
+              "label": {
+                "en": "Gas",
+                "fr": "Gaz",
+                "de": "Gas",
+                "es": "Gas"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "consumption",
+          "type": "number",
+          "label": {
+            "en": "Consumption of the day (kWh)",
+            "fr": "Consommation du jour (kWh)",
+            "de": "Tagesverbrauch (kWh)",
+            "es": "Consumo del día (kWh)"
+          }
+        },
+        {
+          "key": "injection",
+          "type": "number",
+          "label": {
+            "en": "Injection of the day (kWh)",
+            "fr": "Injection du jour (kWh)",
+            "de": "Tageseinspeisung (kWh)",
+            "es": "Inyección del día (kWh)"
+          }
+        },
+        {
+          "key": "date",
+          "type": "string",
+          "label": {
+            "en": "Day of the readings",
+            "fr": "Jour des relevés",
+            "de": "Tag der Messwerte",
+            "es": "Día de las lecturas"
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Meter name",
+            "fr": "Nom du compteur",
+            "de": "Name des Zählers",
+            "es": "Nombre del contador"
+          }
+        },
+        {
+          "key": "ean",
+          "type": "string",
+          "label": {
+            "en": "EAN code",
+            "fr": "Code EAN",
+            "de": "EAN-Code",
+            "es": "Código EAN"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "refresh",
+      "label": {
+        "en": "Refresh the Sibelga data",
+        "fr": "Actualiser les données Sibelga",
+        "de": "Sibelga-Daten aktualisieren",
+        "es": "Actualizar los datos de Sibelga"
+      },
+      "description": {
+        "en": "Read the consumption portal and the grid status now.",
+        "fr": "Lit maintenant le portail de consommation et l'état du réseau.",
+        "de": "Liest jetzt das Verbrauchsportal und den Netzstatus.",
+        "es": "Lee ahora el portal de consumo y el estado de la red."
+      },
+      "timeout_seconds": 120,
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Everything was read",
+            "fr": "Tout a été lu",
+            "de": "Alles wurde gelesen",
+            "es": "Se leyó todo"
+          }
+        },
+        {
+          "key": "meters",
+          "type": "number",
+          "label": {
+            "en": "Number of meters",
+            "fr": "Nombre de compteurs",
+            "de": "Anzahl der Zähler",
+            "es": "Número de contadores"
+          }
+        },
+        {
+          "key": "outages",
+          "type": "number",
+          "label": {
+            "en": "Ongoing outages",
+            "fr": "Pannes en cours",
+            "de": "Laufende Störungen",
+            "es": "Averías en curso"
+          }
+        }
+      ]
+    },
+    {
+      "key": "get_consumption",
+      "label": {
+        "en": "Get a Sibelga consumption",
+        "fr": "Obtenir une consommation Sibelga",
+        "de": "Sibelga-Verbrauch abrufen",
+        "es": "Obtener un consumo de Sibelga"
+      },
+      "description": {
+        "en": "Consumption of a meter over a period, for the following actions.",
+        "fr": "Consommation d'un compteur sur une période, pour les actions suivantes.",
+        "de": "Verbrauch eines Zählers über einen Zeitraum, für die folgenden Aktionen.",
+        "es": "Consumo de un contador durante un periodo, para las acciones siguientes."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "meter",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Meter",
+            "fr": "Compteur",
+            "de": "Zähler",
+            "es": "Contador"
+          },
+          "required": true
+        },
+        {
+          "key": "period",
+          "type": "select",
+          "label": {
+            "en": "Period",
+            "fr": "Période",
+            "de": "Zeitraum",
+            "es": "Periodo"
+          },
+          "required": true,
+          "default": "last_day",
+          "options": [
+            {
+              "value": "last_day",
+              "label": {
+                "en": "Last day available",
+                "fr": "Dernier jour disponible",
+                "de": "Letzter verfügbarer Tag",
+                "es": "Último día disponible"
+              }
+            },
+            {
+              "value": "last_7_days",
+              "label": {
+                "en": "Last 7 days",
+                "fr": "7 derniers jours",
+                "de": "Letzte 7 Tage",
+                "es": "Últimos 7 días"
+              }
+            },
+            {
+              "value": "last_30_days",
+              "label": {
+                "en": "Last 30 days",
+                "fr": "30 derniers jours",
+                "de": "Letzte 30 Tage",
+                "es": "Últimos 30 días"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "available",
+          "type": "boolean",
+          "label": {
+            "en": "Data available",
+            "fr": "Données disponibles",
+            "de": "Daten verfügbar",
+            "es": "Datos disponibles"
+          }
+        },
+        {
+          "key": "consumption",
+          "type": "number",
+          "label": {
+            "en": "Consumption (kWh)",
+            "fr": "Consommation (kWh)",
+            "de": "Verbrauch (kWh)",
+            "es": "Consumo (kWh)"
+          }
+        },
+        {
+          "key": "injection",
+          "type": "number",
+          "label": {
+            "en": "Injection (kWh)",
+            "fr": "Injection (kWh)",
+            "de": "Einspeisung (kWh)",
+            "es": "Inyección (kWh)"
+          }
+        },
+        {
+          "key": "date",
+          "type": "string",
+          "label": {
+            "en": "Last day of the readings",
+            "fr": "Dernier jour des relevés",
+            "de": "Letzter Tag der Messwerte",
+            "es": "Último día de las lecturas"
+          }
+        },
+        {
+          "key": "days",
+          "type": "number",
+          "label": {
+            "en": "Days added up",
+            "fr": "Jours additionnés",
+            "de": "Summierte Tage",
+            "es": "Días sumados"
+          }
+        }
+      ]
+    },
+    {
+      "key": "get_network_status",
+      "label": {
+        "en": "Get the Sibelga grid status",
+        "fr": "Obtenir l'état du réseau Sibelga",
+        "de": "Sibelga-Netzstatus abrufen",
+        "es": "Obtener el estado de la red de Sibelga"
+      },
+      "description": {
+        "en": "Ongoing outages as last read, for the following actions.",
+        "fr": "Pannes en cours lors de la dernière lecture, pour les actions suivantes.",
+        "de": "Laufende Störungen laut letzter Ablesung, für die folgenden Aktionen.",
+        "es": "Averías en curso según la última lectura, para las acciones siguientes."
+      },
+      "timeout_seconds": 15,
+      "outputs": [
+        {
+          "key": "known",
+          "type": "boolean",
+          "label": {
+            "en": "Status known",
+            "fr": "État connu",
+            "de": "Status bekannt",
+            "es": "Estado conocido"
+          }
+        },
+        {
+          "key": "affected",
+          "type": "boolean",
+          "label": {
+            "en": "Outage in my municipalities",
+            "fr": "Panne dans mes communes",
+            "de": "Störung in meinen Gemeinden",
+            "es": "Avería en mis municipios"
+          }
+        },
+        {
+          "key": "outages_watched",
+          "type": "number",
+          "label": {
+            "en": "Outages in my municipalities",
+            "fr": "Pannes dans mes communes",
+            "de": "Störungen in meinen Gemeinden",
+            "es": "Averías en mis municipios"
+          }
+        },
+        {
+          "key": "outages",
+          "type": "number",
+          "label": {
+            "en": "Outages in Brussels",
+            "fr": "Pannes à Bruxelles",
+            "de": "Störungen in Brüssel",
+            "es": "Averías en Bruselas"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Outages in my municipalities (text)",
+            "fr": "Pannes dans mes communes (texte)",
+            "de": "Störungen in meinen Gemeinden (Text)",
+            "es": "Averías en mis municipios (texto)"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "consumption",
+      "label": {
+        "en": "Sibelga consumption",
+        "fr": "Consommation Sibelga",
+        "de": "Sibelga-Verbrauch",
+        "es": "Consumo Sibelga"
+      },
+      "description": {
+        "en": "Daily consumption chart of a meter, last day and last month.",
+        "fr": "Graphique de consommation quotidienne d'un compteur, dernier jour et dernier mois.",
+        "de": "Diagramm des Tagesverbrauchs eines Zählers, letzter Tag und letzter Monat.",
+        "es": "Gráfico de consumo diario de un contador, último día y último mes."
+      },
+      "icon": "zap",
+      "settings": [
+        {
+          "key": "meter",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Meter",
+            "fr": "Compteur",
+            "de": "Zähler",
+            "es": "Contador"
+          }
+        },
+        {
+          "key": "days",
+          "type": "select",
+          "label": {
+            "en": "Days shown",
+            "fr": "Jours affichés",
+            "de": "Angezeigte Tage",
+            "es": "Días mostrados"
+          },
+          "required": false,
+          "default": "30",
+          "options": [
+            {
+              "value": "7",
+              "label": {
+                "en": "7 days",
+                "fr": "7 jours",
+                "de": "7 Tage",
+                "es": "7 días"
+              }
+            },
+            {
+              "value": "14",
+              "label": {
+                "en": "14 days",
+                "fr": "14 jours",
+                "de": "14 Tage",
+                "es": "14 días"
+              }
+            },
+            {
+              "value": "30",
+              "label": {
+                "en": "30 days",
+                "fr": "30 jours",
+                "de": "30 Tage",
+                "es": "30 días"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "network_status",
+      "label": {
+        "en": "Sibelga grid status",
+        "fr": "État du réseau Sibelga",
+        "de": "Sibelga-Netzstatus",
+        "es": "Estado de la red Sibelga"
+      },
+      "description": {
+        "en": "Ongoing outages on the Brussels grid and in your municipalities.",
+        "fr": "Pannes en cours sur le réseau bruxellois et dans vos communes.",
+        "de": "Laufende Störungen im Brüsseler Netz und in Ihren Gemeinden.",
+        "es": "Averías en curso en la red de Bruselas y en sus municipios."
+      },
+      "icon": "activity",
+      "action_timeout_seconds": 45
+    }
+  ]
+}
