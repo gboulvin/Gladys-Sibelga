@@ -206,3 +206,8 @@ test('the catalog description holds 10 to 100 characters per language', () => {
     );
   }
 });
+
+test('the catalog countries: Belgium, which needs Gladys >= 5.3.0', () => {
+  assert.deepEqual(manifest.countries, ['BE']);
+  assert.ok(isAtLeast(minGladysVersion(), [5, 3, 0]), 'countries needs Gladys 5.3.0');
+});
