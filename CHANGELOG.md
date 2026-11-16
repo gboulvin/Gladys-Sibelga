@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-16
+
 ### Changed
 
 - Declared for Belgium only (`countries: ["BE"]`): the Gladys catalog of an
@@ -56,6 +58,7 @@ the notes of the version's GitHub Release.
 - English, French, German and Spanish for every text and for the user
   documentation.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-Sibelga/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-Sibelga/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/gboulvin/Gladys-Sibelga/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/gboulvin/Gladys-Sibelga/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/gboulvin/Gladys-Sibelga/releases/tag/v1.0.0
