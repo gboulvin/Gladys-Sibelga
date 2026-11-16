@@ -34,9 +34,10 @@ User documentation: [English](docs/en.md) · [Français](docs/fr.md) ·
 | Config actions  | `test_connection`, `test_network_status`, `refresh`                                                                                      |
 | Languages       | English, French, German, Spanish (manifest, runtime messages, documentation)                                                             |
 
-Requires **Gladys ≥ 5.1.0** (scene and widget capabilities). The dated daily
-consumption uses `publishEnergyConsumption`; on a Gladys that does not know it
-yet the other features still work and the integration logs a warning.
+Requires **Gladys ≥ 5.3.0** (catalog countries; 5.1.0 for the scene and widget
+capabilities). The dated daily consumption uses `publishEnergyConsumption`; on a
+Gladys that does not know it yet the other features still work and the
+integration logs a warning.
 
 ## Where the data comes from
 

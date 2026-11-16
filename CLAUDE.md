@@ -125,9 +125,9 @@ except the explicit refresh actions.
   `label`, `description` and `placeholder` alike. The catalog `description`
   holds 10 to 100 characters per language. `transports` is `["cloud"]`: there
   is no local channel to Sibelga. `widgets`, `scene_triggers` and
-  `scene_actions` require `gladys_version` `>=5.1.0`. `test/manifest.test.js`
-  ties the manifest to the code (defaults, bounds, action, scene and widget
-  handlers): change both sides together.
+  `scene_actions` require `gladys_version` `>=5.1.0`, `countries` `>=5.3.0`.
+  `test/manifest.test.js` ties the manifest to the code (defaults, bounds,
+  action, scene and widget handlers): change both sides together.
 - **Four languages, always.** English, French, German and Spanish for every
   user-facing text: manifest texts, `src/i18n.js` messages (use `t()`, never
   an inline string) and `docs/{en,fr,de,es}.md`, kept in sync chapter by
